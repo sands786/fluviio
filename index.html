@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fluvio | Stream Money Every Second</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #000000;
+            --white: #ffffff;
+            --green: #10FF10;
+            --green-dark: #0a1a0f;
+            --gray: #888888;
+            --gray-light: #f5f5f5;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1rem 2.5rem;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: var(--white);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-icon::before {
+            content: '';
+            width: 14px;
+            height: 14px;
+            background: var(--black);
+            border-radius: 2px;
+            position: absolute;
+            top: 6px;
+            left: 6px;
+        }
+
+        .logo-icon::after {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--black);
+            border-radius: 2px;
+            position: absolute;
+            bottom: 6px;
+            right: 6px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .nav-links a:hover {
+            color: var(--green);
+        }
+
+        .contact-btn {
+            background: var(--white);
+            color: var(--black);
+            border: none;
+            padding: 0.6rem 1.5rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .contact-btn:hover {
+            background: var(--green);
+            color: var(--black);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: var(--black);
+            padding-top: 60px;
+        }
+
+        .hero-video-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            max-width: 900px;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .hero-video-container video {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            max-width: 900px;
+            padding: 0 2rem;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 255, 16, 0.1);
+            border: 1px solid rgba(16, 255, 16, 0.3);
+            color: var(--green);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: var(--green);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .hero-title {
+            font-size: 5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            line-height: 1.1;
+            color: var(--white);
+            letter-spacing: -3px;
+        }
+
+        .hero-subtitle {
+            font-size: 2rem;
+            font-weight: 500;
+            color: var(--green);
+            margin-bottom: 1.5rem;
+            letter-spacing: -1px;
+        }
+
+        .hero-description {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+            max-width: 650px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 3rem;
+        }
+
+        .btn-primary {
+            background: var(--green);
+            color: var(--black);
+            border: 2px solid var(--green);
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-family: inherit;
+            text-decoration: none;
+        }
+
+        .btn-primary:hover {
+            background: var(--white);
+            border-color: var(--white);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--white);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            text-decoration: none;
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--green);
+            color: var(--green);
+        }
+
+        /* Live Ticker */
+        .live-ticker {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .ticker-item {
+            text-align: center;
+        }
+
+        .ticker-label {
+            font-size: 0.7rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.25rem;
+        }
+
+        .ticker-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--white);
+            font-family: 'Courier New', monospace;
+        }
+
+        .ticker-value.green {
+            color: var(--green);
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 6rem 2rem;
+            text-align: center;
+            background: var(--black);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .stat-label {
+            color: var(--gray);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .stat-value {
+            font-size: 5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--white);
+            font-family: 'Courier New', monospace;
+            letter-spacing: -3px;
+        }
+
+        .stat-value .unit {
+            color: var(--green);
+            font-size: 3rem;
+        }
+
+        .stat-tagline {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        .stat-description {
+            color: var(--gray);
+            font-size: 1rem;
+            line-height: 1.8;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .stat-tx {
+            font-family: 'Courier New', monospace;
+            font-size: 0.75rem;
+            color: var(--gray);
+            word-break: break-all;
+        }
+
+        /* Trusted By Section */
+        .trusted {
+            padding: 4rem 2rem;
+            text-align: center;
+            background: var(--black);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .trusted h3 {
+            color: var(--gray);
+            font-size: 0.85rem;
+            margin-bottom: 2.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .logos {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .logo-item {
+            font-size: 1rem;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.6);
+            transition: color 0.3s ease;
+        }
+
+        .logo-item:hover {
+            color: var(--green);
+        }
+
+        /* What is Section - EXACT MATCH TO IMAGE 5 */
+        .what-is {
+            padding: 8rem 2rem;
+            background: #051a0f;
+            color: var(--white);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .what-is-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .what-is-header {
+            font-size: 8rem;
+            font-weight: 700;
+            line-height: 1;
+            letter-spacing: -4px;
+            margin-bottom: 4rem;
+        }
+
+        .what-is-header .white {
+            color: var(--white);
+        }
+
+        .what-is-header .green {
+            color: var(--green);
+        }
+
+        .section-eyebrow {
+            font-size: 0.85rem;
+            color: var(--green);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .section-heading {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            color: var(--white);
+            line-height: 1.2;
+            letter-spacing: -2px;
+        }
+
+        .section-body {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            max-width: 700px;
+        }
+
+        .section-body p {
+            margin-bottom: 1.5rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-top: 4rem;
+            align-items: center;
+        }
+
+        .feature-text {
+            text-align: left;
+        }
+
+        .feature-visual {
+            height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 50%, rgba(16, 255, 16, 0.1) 0%, transparent 70%);
+            border-radius: 20px;
+        }
+
+        .feature-visual video {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* Comparison Table */
+        .comparison {
+            padding: 6rem 2rem;
+            background: var(--black);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .comparison-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .comparison h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            text-align: center;
+            letter-spacing: -2px;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+        }
+
+        .comparison-table th {
+            text-align: left;
+            padding: 1.25rem 1.5rem;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+            color: var(--gray);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.8rem;
+        }
+
+        .comparison-table td {
+            padding: 1.25rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .comparison-table tr:hover td {
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        .comparison-table .highlight {
+            color: var(--green);
+            font-weight: 600;
+        }
+
+        /* Possibilities Section */
+        .possibilities {
+            padding: 5rem 2rem;
+            background: var(--black);
+            overflow: hidden;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .possibilities-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .possibilities h2 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--white);
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .possibilities-desc {
+            color: var(--gray);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+
+        .marquee-wrapper {
+            overflow: hidden;
+            position: relative;
+            margin: 0 -2rem;
+        }
+
+        .marquee {
+            display: flex;
+            gap: 1rem;
+            animation: scroll 30s linear infinite;
+            white-space: nowrap;
+            padding: 1rem 0;
+        }
+
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .marquee:hover {
+            animation-play-state: paused;
+        }
+
+        .marquee-item {
+            padding: 0.875rem 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            color: rgba(255, 255, 255, 0.6);
+            font-weight: 500;
+            font-size: 0.95rem;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: transparent;
+        }
+
+        .marquee-item:hover {
+            border-color: var(--green);
+            color: var(--green);
+            background: rgba(16, 255, 16, 0.05);
+        }
+
+        /* Use Cases */
+        .use-cases {
+            padding: 6rem 2rem;
+            background: var(--black);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .use-cases-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .use-cases h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            text-align: center;
+            letter-spacing: -2px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(16, 255, 16, 0.3);
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .card h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--white);
+        }
+
+        .card p {
+            color: var(--gray);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 6rem 2rem;
+            background: var(--black);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .how-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .how-it-works h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 3rem;
+            text-align: center;
+            letter-spacing: -2px;
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+        }
+
+        .step {
+            position: relative;
+            padding: 2rem;
+        }
+
+        .step-number {
+            font-size: 4rem;
+            font-weight: 800;
+            color: rgba(16, 255, 16, 0.15);
+            position: absolute;
+            top: 0;
+            left: 1rem;
+            line-height: 1;
+        }
+
+        .step h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            margin-top: 2rem;
+            color: var(--white);
+        }
+
+        .step p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        /* Benefits Section - EXACT MATCH TO IMAGE 4 */
+        .benefits {
+            padding: 6rem 2rem;
+            background: var(--white);
+            color: var(--black);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .benefits-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+
+        .benefits-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding-top: 1rem;
+        }
+
+        .benefits-content h2 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            letter-spacing: -2px;
+            line-height: 1.2;
+        }
+
+        .benefits-content h2 .highlight-box {
+            background: var(--black);
+            color: var(--green);
+            padding: 0.2rem 1rem;
+            border-radius: 8px;
+            display: inline;
+        }
+
+        .benefits-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .benefit-row {
+            padding: 1.5rem 0;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .benefit-row:last-child {
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .benefit-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--black);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--green);
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .benefit-text h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .benefit-text p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        /* Governance Section - EXACT MATCH TO IMAGE 3 */
+        .governance {
+            padding: 8rem 2rem;
+            background: var(--white);
+            color: var(--black);
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .governance-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .governance-text {
+            font-size: 2.5rem;
+            font-weight: 500;
+            line-height: 1.4;
+            margin-bottom: 3rem;
+            letter-spacing: -1px;
+        }
+
+        .governance-text .token-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--black);
+            color: var(--green);
+            padding: 0.3rem 1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 2rem;
+            vertical-align: middle;
+            margin: 0 0.3rem;
+        }
+
+        .governance-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--black);
+            color: var(--green);
+            padding: 1rem 2.5rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .governance-btn:hover {
+            background: var(--green);
+            color: var(--black);
+        }
+
+        /* Footer - EXACT MATCH TO IMAGE 2 */
+        footer {
+            background: var(--white);
+            color: var(--black);
+            padding: 4rem 2rem 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .footer-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .footer-big-text {
+            font-size: 15vw;
+            font-weight: 900;
+            line-height: 0.9;
+            letter-spacing: -0.05em;
+            color: var(--black);
+            margin-bottom: 4rem;
+            overflow: hidden;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 3rem;
+            margin-bottom: 3rem;
+            padding-top: 3rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .footer-section h4 {
+            color: var(--black);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 0.875rem;
+        }
+
+        .footer-links a {
+            color: var(--gray);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--black);
+        }
+
+        .footer-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .features-grid,
+            .benefits-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .steps-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .hero-title {
+                font-size: 3.5rem;
+            }
+
+            .what-is-header {
+                font-size: 4rem;
+            }
+
+            .section-heading {
+                font-size: 2.5rem;
+            }
+
+            .stat-value {
+                font-size: 3rem;
+            }
+
+            .comparison h2,
+            .use-cases h2,
+            .how-it-works h2,
+            .benefits-content h2 {
+                font-size: 2.5rem;
+            }
+
+            .governance-text {
+                font-size: 1.8rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+
+            .hero-subtitle {
+                font-size: 1.5rem;
+            }
+
+            .what-is-header {
+                font-size: 3rem;
+            }
+
+            .section-heading {
+                font-size: 2rem;
+            }
+
+            .stat-value {
+                font-size: 2.5rem;
+            }
+
+            .cards-grid,
+            .benefits-grid,
+            .steps-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-big-text {
+                font-size: 20vw;
+            }
+
+            .comparison-table {
+                font-size: 0.8rem;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 0.75rem;
+            }
+
+            .governance-text {
+                font-size: 1.4rem;
+            }
+        }
+    </style>
+<base target="_blank">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <div class="logo-icon"></div>
+                <span>Fluvio</span>
+            </a>
+            <div class="nav-links">
+                <a href="#technology">Technology</a>
+                <a href="#builders">Builders</a>
+                <a href="#adoptions">Adoptions</a>
+                <a href="#ecosystem">Ecosystem</a>
+                <a href="#governance">Governance</a>
+                <a href="https://fluvio-nine.vercel.app/" class="contact-btn">Start Streaming</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-video-container">
+            <video autoplay muted loop playsinline>
+                <source src="https://superfluid.org/hero-fluid.webm" type="video/webm">
+            </video>
+        </div>
+        <div class="hero-content">
+            <div class="hero-badge">Live on Initia Testnet · initiation-2 · Block #22041965</div>
+            <h1 class="hero-title">Money Flows, Not Moves.</h1>
+            <div class="hero-subtitle">Earn Every Millisecond</div>
+            <p class="hero-description">
+                Fluvio is the first money streaming protocol built natively on Initia. While Superfluid on Ethereum fakes streaming with JavaScript math every 12 seconds, Fluvio updates real on-chain state every 100 milliseconds. Send salaries, subscriptions, grants, and rentals by the millisecond — to any .init username, from any chain.
+            </p>
+            <div class="hero-buttons">
+                <a href="#" class="btn-primary">Start Streaming →</a>
+                <a href="#" class="btn-secondary">View Contract on Explorer</a>
+            </div>
+            <div class="live-ticker">
+                <div class="ticker-item">
+                    <div class="ticker-label">Block Time</div>
+                    <div class="ticker-value green">100ms</div>
+                </div>
+                <div class="ticker-item">
+                    <div class="ticker-label">Network</div>
+                    <div class="ticker-value">fluvio-1</div>
+                </div>
+                <div class="ticker-item">
+                    <div class="ticker-label">Global Flow Rate</div>
+                    <div class="ticker-value green">0.0015 INIT/sec</div>
+                </div>
+                <div class="ticker-item">
+                    <div class="ticker-label">Active Streams</div>
+                    <div class="ticker-value">3</div>
+                </div>
+                <div class="ticker-item">
+                    <div class="ticker-label">Contract Block</div>
+                    <div class="ticker-value">#22041965</div>
+                </div>
+                <div class="ticker-item">
+                    <div class="ticker-label">All-time Streamed</div>
+                    <div class="ticker-value green">142,857 INIT</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="stats-container">
+            <div class="stat-label">Powering</div>
+            <div class="stat-value">0.0015 <span class="unit">INIT/sec</span></div>
+            <div class="stat-tagline">flowing continuously, every 100 milliseconds, on Initia testnet</div>
+            <div class="stat-description">
+                Fluvio's smart contracts are live on initiation-2, deployed at block #22041965. Every active stream updates real on-chain state 10 times per second — not client-side JavaScript math. Three Move contracts handle escrow, streaming logic, and a public registry oracle any Initia app can query.
+            </div>
+            <div class="stat-tx">TX: 21D7D1326DA445B2AE9843FC2DE05B9F9BD457FF760EB7BD55E5DAA07106CE64</div>
+        </div>
+    </section>
+
+    <!-- Trusted By -->
+    <section class="trusted">
+        <h3>Built natively with Initia's full technology stack</h3>
+        <div class="logos">
+            <div class="logo-item">Initia Labs</div>
+            <div class="logo-item">InterwovenKit</div>
+            <div class="logo-item">.init Usernames</div>
+            <div class="logo-item">Interwoven Bridge</div>
+            <div class="logo-item">Move VM</div>
+        </div>
+    </section>
+
+    <!-- What is Fluvio - EXACT STYLE FROM IMAGE 5 -->
+    <section class="what-is" id="technology">
+        <div class="what-is-container">
+            <div class="what-is-header">
+                <span class="white">What is</span><br>
+                <span class="green">Fluvio</span>
+            </div>
+
+            <div class="section-eyebrow">01 — 03 · The Protocol</div>
+            <h2 class="section-heading">Real streaming. Not a simulation.</h2>
+            <div class="section-body">
+                <p>Fluvio is Initia's native money streaming protocol — the first protocol where "real-time" actually means real-time. Instead of sending 1,000 INIT in a single lump transaction, you deposit into a Fluvio vault and define a flow rate. The contract streams 0.000012 INIT to the recipient every 100 milliseconds — the exact interval of Initia's block time.</p>
+                <p>The recipient's claimable balance grows every single block. They can withdraw at any moment — mid-stream, without cancelling. The sender can cancel at any time, and unstreamed INIT returns to their vault instantly.</p>
+                <p>This is money streaming as infrastructure, not as a UI trick.</p>
+            </div>
+
+            <div class="features-grid" style="margin-top: 6rem;">
+                <div class="feature-text">
+                    <div class="section-eyebrow">02 — 03 · The Advantage</div>
+                    <h2 class="section-heading">Superfluid fakes it. We don't.</h2>
+                    <div class="section-body">
+                        <p>Superfluid on Ethereum is the market leader in money streaming, with over $500M TVL. But it has a dirty secret: it doesn't actually stream. Superfluid calculates your "real-time balance" client-side using JavaScript: lastSettled + (flowRate × secondsElapsed). The Ethereum blockchain sees nothing between 12-second blocks. The streaming is an illusion rendered in your browser.</p>
+                        <p>On Fluvio, the Move function timestamp::now_milliseconds() returns a value that actually changes every 100ms — because Initia produces a block every 100ms. When you call claimable_amount() on our contract, it returns a number calculated from real on-chain timestamps, not browser math. The state is real. The blockchain knows about every millisecond.</p>
+                        <p>This matters for three reasons: micro-streams become economically viable (no $5 gas per tick), liquidation detection is near-instant instead of needing sentinel bots, and composability is real — any Initia contract can read stream state trustlessly.</p>
+                    </div>
+                </div>
+                <div class="feature-visual">
+                    <video autoplay muted loop playsinline>
+                        <source src="https://superfluid.org/sup-coin-2.webm" type="video/webm">
+                    </video>
+                </div>
+            </div>
+
+            <div class="features-grid" style="margin-top: 6rem;">
+                <div class="feature-visual">
+                    <video autoplay muted loop playsinline>
+                        <source src="https://superfluid.org/sup-coin-2.webm" type="video/webm">
+                    </video>
+                </div>
+                <div class="feature-text">
+                    <div class="section-eyebrow">03 — 03 · The Architecture</div>
+                    <h2 class="section-heading">Three contracts. One ecosystem primitive.</h2>
+                    <div class="section-body">
+                        <p>Fluvio is three Move contracts deployed on Initia testnet at address init17g5nnyjfkhnjg4w2m82m9st6lxdhuw62zjgsmd.</p>
+                        <p>stream_vault.move handles escrow. Users deposit INIT into their personal vault. The vault tracks total balance and how much is locked for active streams. You cannot withdraw locked funds — the math is enforced on-chain.</p>
+                        <p>stream_core.move is the heart of the protocol. It stores every stream as a struct with sender, recipient, rate_per_ms, start_time_ms, and end_time_ms. The claimable_amount() function uses timestamp::now_milliseconds() — Initia's 100ms-resolution clock — to calculate exactly how much has streamed since the last withdrawal. Pure math, no oracle.</p>
+                        <p>stream_registry.move is a public oracle. Any contract or app on Initia can call get_global_flow_rate(), get_active_stream_count(), and get_all_time_value_streamed(). Fluvio is not just an app — it is infrastructure the entire Initia ecosystem can build on.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section class="comparison">
+        <div class="comparison-container">
+            <h2>Fluvio vs Superfluid</h2>
+            <table class="comparison-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>Superfluid (Ethereum)</th>
+                        <th>Fluvio (Initia)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Block time</td>
+                        <td>12 seconds</td>
+                        <td class="highlight">100 milliseconds</td>
+                    </tr>
+                    <tr>
+                        <td>Streaming reality</td>
+                        <td>Off-chain JavaScript math</td>
+                        <td class="highlight">Real on-chain state every block</td>
+                    </tr>
+                    <tr>
+                        <td>Stream creation gas</td>
+                        <td>$5–20 on mainnet</td>
+                        <td class="highlight">Fractions of a cent</td>
+                    </tr>
+                    <tr>
+                        <td>Minimum viable stream</td>
+                        <td>~$1/hr (gas makes micro-streams uneconomic)</td>
+                        <td class="highlight">$0.001/hr viable</td>
+                    </tr>
+                    <tr>
+                        <td>Liquidation detection</td>
+                        <td>Needs sentinel bots watching 24/7</td>
+                        <td class="highlight">Near-instant at 100ms</td>
+                    </tr>
+                    <tr>
+                        <td>Buffer deposit required</td>
+                        <td>4 hours of stream value locked</td>
+                        <td class="highlight">Minimal — fast finality</td>
+                    </tr>
+                    <tr>
+                        <td>Wallet UX</td>
+                        <td>New popup for every stream action</td>
+                        <td class="highlight">Sign once, stream for 30 days</td>
+                    </tr>
+                    <tr>
+                        <td>Cross-chain</td>
+                        <td>Multiple bridges, complex setup</td>
+                        <td class="highlight">Interwoven Bridge — one click</td>
+                    </tr>
+                    <tr>
+                        <td>Recipient identity</td>
+                        <td>0x hex addresses</td>
+                        <td class="highlight">.init human-readable usernames</td>
+                    </tr>
+                    <tr>
+                        <td>Public oracle</td>
+                        <td>No</td>
+                        <td class="highlight">Yes — stream_registry.move</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Possibilities Section -->
+    <section class="possibilities" id="builders">
+        <div class="possibilities-container">
+            <h2>Possibilities</h2>
+            <p class="possibilities-desc">With Fluvio, earning onchain becomes a completely novel experience</p>
+
+            <div class="marquee-wrapper">
+                <div class="marquee" id="marquee">
+                    <div class="marquee-item">Get paid by the second</div>
+                    <div class="marquee-item">Stream salaries</div>
+                    <div class="marquee-item">Subscribe by the millisecond</div>
+                    <div class="marquee-item">Rent cloud infrastructure</div>
+                    <div class="marquee-item">Dollar-cost average automatically</div>
+                    <div class="marquee-item">Stream developer grants</div>
+                    <div class="marquee-item">Pay per API call</div>
+                    <div class="marquee-item">Cross-chain streaming</div>
+                    <div class="marquee-item">Real-time creator royalties</div>
+                    <div class="marquee-item">Micro-payment channels</div>
+                    <div class="marquee-item">Stream game rewards</div>
+                    <div class="marquee-item">Vesting schedules</div>
+                    <div class="marquee-item">Stream yield distribution</div>
+                    <div class="marquee-item">Get paid by the second</div>
+                    <div class="marquee-item">Stream salaries</div>
+                    <div class="marquee-item">Subscribe by the millisecond</div>
+                    <div class="marquee-item">Rent cloud infrastructure</div>
+                    <div class="marquee-item">Dollar-cost average automatically</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases -->
+    <section class="use-cases" id="adoptions">
+        <div class="use-cases-container">
+            <h2>Use Cases</h2>
+            <div class="cards-grid">
+                <div class="card">
+                    <h3>Real-time Payroll</h3>
+                    <p>Replace monthly salary runs with continuous streams. Employees and contractors receive INIT into their .init wallet every millisecond they work. No more waiting for payday — your balance grows as you work. For DAOs and remote-first teams, this is the most equitable and transparent payroll system ever built.</p>
+                </div>
+                <div class="card">
+                    <h3>Subscriptions</h3>
+                    <p>Stream subscription fees instead of charging monthly lump sums. A $10/month newsletter becomes 0.000000038 INIT per millisecond. Subscribers can cancel the stream at any moment and the unstreamed portion returns to their vault instantly. No chargebacks. No disputes. No waiting for refunds.</p>
+                </div>
+                <div class="card">
+                    <h3>Infrastructure Rental</h3>
+                    <p>Pay for servers, APIs, storage, and compute by the millisecond. The moment you stop your stream, payment stops. No monthly invoices. No overpaying for idle resources. For developers building on Initia, this enables a genuinely usage-based infrastructure economy.</p>
+                </div>
+                <div class="card">
+                    <h3>Protocol Grants</h3>
+                    <p>Stream grants to developers building in the Initia ecosystem. Instead of large milestone payouts that create perverse incentives, grant funds flow continuously — aligned with ongoing contribution. Initia Labs could stream INIT to Fluvio's team in real time right now, using our own protocol.</p>
+                </div>
+                <div class="card">
+                    <h3>Gaming Rewards</h3>
+                    <p>Every second a player spends in a game, INIT flows into their .init wallet. True play-to-earn — not a promise, not a token unlock schedule, but a live stream of value. Game developers set the flow rate. Players see their balance tick in real time. This is the Web3 gaming revenue model reimagined.</p>
+                </div>
+                <div class="card">
+                    <h3>Cross-chain Streaming</h3>
+                    <p>Deposit USDC from Ethereum via Interwoven Bridge. It arrives as INIT in your Fluvio vault. Start streaming immediately to any .init address on Initia. One flow across multiple chains, zero friction. This is the cross-chain UX Web3 has promised for years — Fluvio and Initia deliver it.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <div class="how-container">
+            <h2>How It Works</h2>
+            <div class="steps-grid">
+                <div class="step">
+                    <div class="step-number">01</div>
+                    <h3>Connect Your .init Wallet</h3>
+                    <p>Open Fluvio and connect with Keplr. Initia's .init username system means your streaming identity is human-readable — shahmeer.init, not 0x742d35Cc6634C0532925a3b8D4C9C2D4. Every stream shows real names, not hex strings. This is what onboarding to Web3 should feel like.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">02</div>
+                    <h3>Deposit INIT to Your Vault</h3>
+                    <p>Deposit INIT from your connected wallet into your personal Fluvio vault. Coming from another chain? Use the Interwoven Bridge directly in the app — deposit USDC from Ethereum and it arrives as INIT ready to stream. Your vault tracks your total balance and how much is locked in active streams.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">03</div>
+                    <h3>Create a Stream</h3>
+                    <p>Click "New Stream." Enter the recipient's .init username, the total amount, and the duration. Fluvio calculates the exact rate per millisecond. Approve once with a session key — this is Initia's auto-signing UX — and the stream begins. You will never see another wallet popup for this stream.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">04</div>
+                    <h3>Watch Money Flow</h3>
+                    <p>Your dashboard shows every incoming and outgoing stream with a live counter ticking every 100ms. Recipients can withdraw their claimable balance at any time without cancelling the stream. You can cancel any stream at any time — unstreamed INIT returns to your vault in the same transaction.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section - EXACT MATCH TO IMAGE 4 -->
+    <section class="benefits">
+        <div class="benefits-container">
+            <div class="benefits-label">Benefits</div>
+            <div class="benefits-content">
+                <h2><span class="highlight-box">Fluvio enables</span> the top crypto-native organizations to manage recurring payments like airdrops, salaries and grants. Beyond payments, Fluvio enables app developers to craft novel streaming rewards experiences across DeFi, SocialFi, and Gaming.</h2>
+                <div class="benefits-list">
+                    <div class="benefit-row">
+                        <div class="benefit-icon">⚡</div>
+                        <div class="benefit-text">
+                            <h4>Genuinely Real-time</h4>
+                            <p>Initia's 100ms block time means Fluvio's claimable_amount() function returns a different value every tenth of a second. This isn't a UI animation — it's real on-chain state.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-row">
+                        <div class="benefit-icon">✍️</div>
+                        <div class="benefit-text">
+                            <h4>Sign Once, Stream Forever</h4>
+                            <p>Initia's session key UX is the feature that makes Fluvio possible at consumer scale. You approve a stream once — one wallet signature — and it runs automatically for the entire duration.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-row">
+                        <div class="benefit-icon">👤</div>
+                        <div class="benefit-text">
+                            <h4>.init Identity Layer</h4>
+                            <p>Streaming to alice.init feels human. Streaming to 0x742d35Cc6634C0532925a3b8D4C9C2D4 does not. Fluvio uses Initia's .init username system as the identity layer for all streams.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-row">
+                        <div class="benefit-icon">🌐</div>
+                        <div class="benefit-text">
+                            <h4>Interwoven Bridge Native</h4>
+                            <p>Most DeFi protocols treat cross-chain as an afterthought. Fluvio treats it as a first-class feature. Deposit from Ethereum, Cosmos, or any Interwoven-connected chain directly in the Fluvio UI.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-row">
+                        <div class="benefit-icon">📡</div>
+                        <div class="benefit-text">
+                            <h4>Ecosystem Oracle</h4>
+                            <p>stream_registry.move is a public good for the entire Initia ecosystem. Any smart contract can call get_global_flow_rate() to see how much INIT is streaming per second network-wide.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-row">
+                        <div class="benefit-icon">💰</div>
+                        <div class="benefit-text">
+                            <h4>Appchain Economics</h4>
+                            <p>Running on a dedicated Fluvio appchain means gas costs are near zero per stream tick. On Ethereum, a $1/hr stream would cost more in gas than it delivers. On Fluvio, micro-streams of $0.001/hr are economically viable.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Governance Section - EXACT MATCH TO IMAGE 3 -->
+    <section class="governance" id="governance">
+        <div class="governance-container">
+            <div class="governance-text">
+                Every time you use apps in our ecosystem rewards campaign, you earn <span class="token-badge">INIT</span> ecosystem tokens. Use your rewards to help govern the Fluvio protocol and shape the future of the money streaming economy.
+            </div>
+            <a href="#" class="governance-btn">Governance →</a>
+        </div>
+    </section>
+
+    <!-- Footer - EXACT MATCH TO IMAGE 2 -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-big-text">Fluvio</div>
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Protocol</h4>
+                    <div class="footer-links">
+                        <a href="#">Governance</a>
+                        <a href="#">Docs</a>
+                        <a href="#">Explorer</a>
+                        <a href="#">Dashboard</a>
+                        <a href="#">TOGA</a>
+                        <a href="#">Forum</a>
+                        <a href="#">Voting</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <div class="footer-links">
+                        <a href="#">Blog</a>
+                        <a href="#">Media Kit</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <div class="footer-links">
+                        <a href="#">X</a>
+                        <a href="#">Farcaster</a>
+                        <a href="#">Discord</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <div class="footer-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of use</a>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2026 The Fluvio Foundation</span>
+                <span>Built on Initia · fluvio-1 appchain · initiation-2 testnet</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Duplicate marquee items for seamless loop
+        const marquee = document.getElementById('marquee');
+        if (marquee) {
+            const items = marquee.innerHTML;
+            marquee.innerHTML = items + items;
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Nav scroll effect
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            if (window.pageYOffset > 100) {
+                nav.style.background = 'rgba(0, 0, 0, 0.98)';
+            } else {
+                nav.style.background = 'rgba(0, 0, 0, 0.9)';
+            }
+        });
+    </script>
+</body>
+</html>
